@@ -100,7 +100,7 @@ resource "azurerm_lb" "vmsslb" {
 resource "azurerm_lb_backend_address_pool" "bepool" {
   count               = var.enable_load_balancer ? 1 : 0
   name                = lower("lbe-backend-pool-${var.vmscaleset_name}")
-  resource_group_name = data.azurerm_resource_group.rg.name
+  #resource_group_name = data.azurerm_resource_group.rg.name
   loadbalancer_id     = azurerm_lb.vmsslb[count.index].id
 }
 
@@ -251,9 +251,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
     }
   }
 
+  # If there is a custom image, this needs to be false
   automatic_os_upgrade_policy {
-    disable_automatic_rollback  = true
-    enable_automatic_os_upgrade = true
+    disable_automatic_rollback  = var.source_image_id == null ? true : false
+    enable_automatic_os_upgrade = var.source_image_id == null ? true : false
   }
 
   rolling_upgrade_policy {
@@ -346,9 +347,10 @@ resource "azurerm_windows_virtual_machine_scale_set" "winsrv_vmss" {
     }
   }
 
+  # If there is a custom image, this needs to be false
   automatic_os_upgrade_policy {
-    disable_automatic_rollback  = true
-    enable_automatic_os_upgrade = true
+    disable_automatic_rollback  = var.source_image_id == null ? true : false
+    enable_automatic_os_upgrade = var.source_image_id == null ? true : false
   }
 
   rolling_upgrade_policy {

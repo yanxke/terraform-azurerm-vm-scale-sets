@@ -252,16 +252,22 @@ resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
   }
 
   # If there is a custom image, this needs to be false
-  automatic_os_upgrade_policy {
-    disable_automatic_rollback  = var.source_image_id == null ? true : false
-    enable_automatic_os_upgrade = var.source_image_id == null ? true : false
+  dynamic "automatic_os_upgrade_policy" {
+    for_each = var.os_upgrade_mode == "Automatic" ? [{}] : []
+    content {
+      disable_automatic_rollback  = var.source_image_id == null ? true : false
+      enable_automatic_os_upgrade = var.source_image_id == null ? true : false
+    }
   }
 
-  rolling_upgrade_policy {
-    max_batch_instance_percent              = 20
-    max_unhealthy_instance_percent          = 20
-    max_unhealthy_upgraded_instance_percent = 20
-    pause_time_between_batches              = "PT0S"
+  dynamic "rolling_upgrade_policy" {
+    for_each = var.os_upgrade_mode == "Automatic" ? [{}] : []
+    content {
+      max_batch_instance_percent              = 20
+      max_unhealthy_instance_percent          = 20
+      max_unhealthy_upgraded_instance_percent = 20
+      pause_time_between_batches              = "PT0S"
+    }
   }
 
   automatic_instance_repair {
@@ -348,16 +354,22 @@ resource "azurerm_windows_virtual_machine_scale_set" "winsrv_vmss" {
   }
 
   # If there is a custom image, this needs to be false
-  automatic_os_upgrade_policy {
-    disable_automatic_rollback  = var.source_image_id == null ? true : false
-    enable_automatic_os_upgrade = var.source_image_id == null ? true : false
+  dynamic "automatic_os_upgrade_policy" {
+    for_each = var.os_upgrade_mode == "Automatic" ? [{}] : []
+    content {
+      disable_automatic_rollback  = var.source_image_id == null ? true : false
+      enable_automatic_os_upgrade = var.source_image_id == null ? true : false
+    }
   }
 
-  rolling_upgrade_policy {
-    max_batch_instance_percent              = 20
-    max_unhealthy_instance_percent          = 20
-    max_unhealthy_upgraded_instance_percent = 5
-    pause_time_between_batches              = "PT0S"
+  dynamic "rolling_upgrade_policy" {
+    for_each = var.os_upgrade_mode == "Automatic" ? [{}] : []
+    content {
+      max_batch_instance_percent              = 20
+      max_unhealthy_instance_percent          = 20
+      max_unhealthy_upgraded_instance_percent = 5
+      pause_time_between_batches              = "PT0S"
+    }
   }
 
   automatic_instance_repair {

@@ -178,7 +178,7 @@ resource "azurerm_network_security_rule" "nsg_rule" {
 #---------------------------------------
 resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
   count                           = var.os_flavor == "linux" ? 1 : 0
-  name                            = format("vm%s%s", lower(replace(var.vmscaleset_name, "/[[:^alnum:]]/", "")), count.index + 1)
+  name                            = format("vmss-%s%s", lower(var.vmscaleset_name), count.index + 1)
   resource_group_name             = data.azurerm_resource_group.rg.name
   location                        = data.azurerm_resource_group.rg.location
   overprovision                   = var.overprovision

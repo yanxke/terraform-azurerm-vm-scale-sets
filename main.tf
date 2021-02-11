@@ -174,7 +174,7 @@ resource "azurerm_network_security_rule" "nsg_rule" {
 }
 
 #---------------------------------------
-# Linux Virutal machine scale set
+# Linux Virtual machine scale set
 #---------------------------------------
 resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
   count                           = var.os_flavor == "linux" ? 1 : 0
@@ -278,7 +278,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
 #---------------------------------------
 resource "azurerm_windows_virtual_machine_scale_set" "winsrv_vmss" {
   count                  = var.os_flavor == "windows" ? 1 : 0
-  name                   = format("%s", lower(replace(var.vmscaleset_name, "/[[:^alnum:]]/", "")))
+  name                   = format("vmss-%s%s", lower(var.vmscaleset_name), count.index + 1)
   computer_name_prefix   = format("%s%s", lower(replace(var.vm_computer_name, "/[[:^alnum:]]/", "")), count.index + 1)
   resource_group_name    = data.azurerm_resource_group.rg.name
   location               = data.azurerm_resource_group.rg.location

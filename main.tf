@@ -184,7 +184,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
   overprovision                   = var.overprovision
   sku                             = var.virtual_machine_size
   instances                       = var.instances_count
-  zones                           = var.availability_zones
+  # This is not supported in all regions right now, for example China.
+  # zones                           = var.availability_zones
   zone_balance                    = var.availability_zone_balance
   single_placement_group          = var.single_placement_group
   admin_username                  = var.admin_username
@@ -235,7 +236,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "linux_vmss" {
     network_security_group_id     = azurerm_network_security_group.nsg.id
 
     ip_configuration {
-      name                                   = lower("ipconig-${format("vm%s%s", lower(replace(var.vmscaleset_name, "/[[:^alnum:]]/", "")), count.index + 1)}")
+      name                                   = lower("ipconfig-${format("vm%s%s", lower(replace(var.vmscaleset_name, "/[[:^alnum:]]/", "")), count.index + 1)}")
       primary                                = true
       subnet_id                              = data.azurerm_subnet.snet.id
       load_balancer_backend_address_pool_ids = var.enable_load_balancer ? [azurerm_lb_backend_address_pool.bepool[0].id] : null
@@ -291,7 +292,8 @@ resource "azurerm_windows_virtual_machine_scale_set" "winsrv_vmss" {
   overprovision          = var.overprovision
   sku                    = var.virtual_machine_size
   instances              = var.instances_count
-  zones                  = var.availability_zones
+  # This is not supported in all regions right now, for example China.
+  # zones                  = var.availability_zones
   zone_balance           = var.availability_zone_balance
   single_placement_group = var.single_placement_group
   admin_username         = var.admin_username
@@ -337,7 +339,7 @@ resource "azurerm_windows_virtual_machine_scale_set" "winsrv_vmss" {
     network_security_group_id     = azurerm_network_security_group.nsg.id
 
     ip_configuration {
-      name                                   = lower("ipconig-${format("vm%s%s", lower(replace(var.vmscaleset_name, "/[[:^alnum:]]/", "")), count.index + 1)}")
+      name                                   = lower("ipconfig-${format("vm%s%s", lower(replace(var.vmscaleset_name, "/[[:^alnum:]]/", "")), count.index + 1)}")
       primary                                = true
       subnet_id                              = data.azurerm_subnet.snet.id
       load_balancer_backend_address_pool_ids = var.enable_load_balancer ? [azurerm_lb_backend_address_pool.bepool[0].id] : null

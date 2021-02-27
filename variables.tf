@@ -102,7 +102,7 @@ variable "availability_zones" {
 
 variable "availability_zone_balance" {
   description = "Should the Virtual Machines in this Scale Set be strictly evenly distributed across Availability Zones?"
-  default     = true
+  default     = false
 }
 
 variable "single_placement_group" {
